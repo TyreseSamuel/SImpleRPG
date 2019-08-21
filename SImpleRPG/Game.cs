@@ -9,9 +9,10 @@ namespace SImpleRPG
     class Game
     {
         string playerName = "";
-        int playerMaxHealth = 100;
+        int playerMaxHealth = 125;
         int playerHealth = 125;
         int playerDamage = 25;
+        int playerHealing = 50;
         public void Start()
         {
             Welcome();
@@ -47,7 +48,7 @@ namespace SImpleRPG
             bool survived = true;
             while (playerHealth > 0 && monsterHealth > 0)
             {
-                Console.Write("What will you do? (fight/flee) ");
+                Console.Write("What will you do? (fight/flee/heal) ");
                 action = Console.ReadLine();
                 if (action == "fight" || action == "Fight")
                 {
@@ -60,8 +61,19 @@ namespace SImpleRPG
                 else if (action == "flee" || action == "Flee")
                 {
                     //escape
-                    Console.WriteLine("Pussy...");
-                    return true;
+                    survived = flee();
+                    if (survived)
+                    {
+                        return true;
+                    }
+                }
+                else if (action == "heal" || action == "Heal")
+                {
+                    survived = heal(ref playerHealth, ref playerHealing, ref monsterHealth, ref monsterDamage);
+                    if (survived)
+                    {
+                        return true;
+                    }
                 }
             }
             return survived;
@@ -94,13 +106,21 @@ namespace SImpleRPG
 
         bool flee()
         {
+            //escape
             Console.WriteLine("Pussy...");
             return true;
         }
 
-        bool heal()
+        bool heal(ref int playerHealth, ref int playerHealing, ref int monsterHealth, ref int monsterDamage)
         {
-
+            //player heal
+            Console.WriteLine(playerName + " uses sparking blast " + playerName + " recovers " + playerHealing + " health.");
+            playerHealth += playerHealing;
+            if (playerHealth > playerMaxHealth)
+            {
+                playerHealth = playerMaxHealth;
+            }
+            Console.WriteLine("You have " + playerHealth + " remaining.");
             return true;
         }
     }
