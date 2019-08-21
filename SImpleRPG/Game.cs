@@ -9,7 +9,9 @@ namespace SImpleRPG
     class Game
     {
         string playerName = "";
-        int playerHealth = 100;
+        int playerMaxHealth = 100;
+        int playerHealth = 125;
+        int playerDamage = 25;
         public void Start()
         {
             Welcome();
@@ -21,7 +23,7 @@ namespace SImpleRPG
             while (alive && monsterRemaining > 0)
             {
                 Console.WriteLine("There are " + monsterRemaining + " monsters remaining.");
-                alive = Encounter(20);
+                alive = Encounter(20, 20);
                 monsterRemaining--;
             }
 
@@ -35,36 +37,70 @@ namespace SImpleRPG
             Console.WriteLine("Welcome, " + playerName + ".");
         }
 
-        bool Encounter(int monsterDamage)
+        bool Encounter(int monsterDamage, int monsterHealth)
         {
             Console.WriteLine("");
-            Console.WriteLine("There is a monster in front of you");
+            Console.WriteLine("Hey Chief there is a monster in front of you");
 
 
             string action = "";
-            Console.Write("What will you do? (fight/flee) ");
-            action = Console.ReadLine();
-            if (action == "fight" || action == "Fight")
+            bool survived = true;
+            while (playerHealth > 0 && monsterHealth > 0)
             {
-                //monster attack
-                Console.WriteLine("THe monster attacks! " + playerName + " takes " + monsterDamage + " damage!");
-                playerHealth = playerHealth - monsterDamage;
-                Console.WriteLine(playerName + " has " + playerHealth + " health remaining.");
-                if (playerHealth <= 0)
+                Console.Write("What will you do? (fight/flee) ");
+                action = Console.ReadLine();
+                if (action == "fight" || action == "Fight")
                 {
-                    //player defeat!
-                    Console.WriteLine(playerName + " was defeated...");
-                    return false;
+                    survived = fight(ref monsterHealth, ref monsterDamage);
+                    if (!survived)
+                    {
+                        return false;
+                    }
                 }
-                //player attack
-                Console.WriteLine(playerName + " attacks! The monster got yeeted!");
+                else if (action == "flee" || action == "Flee")
+                {
+                    //escape
+                    Console.WriteLine("Pussy...");
+                    return true;
+                }
+            }
+            return survived;
+        }
 
-            }
-            else if (action == "flee" || action == "Flee")
+        bool  fight(ref int monsterHealth, ref int monsterDamage)
+        {
+            //monster attack
+            Console.WriteLine("The monster attacks! " + playerName + " takes " + monsterDamage + " damage!");
+            playerHealth = playerHealth - monsterDamage;
+            Console.WriteLine(playerName + " has " + playerHealth + " health remaining.");
+            if (playerHealth <= 0)
             {
-                //escape
-                Console.WriteLine("Pussy...");
+                //player defeat!
+                Console.WriteLine(playerName + " was defeated...");
+                return false;
             }
+            //player attack
+            Console.WriteLine(playerName + " attacks! The monster takes " + playerDamage + " damage.");
+            monsterHealth -= playerDamage;
+            Console.WriteLine("The monster has " + monsterHealth + " health remaining.");
+            if (monsterHealth <= 0)
+            {
+                //monster defeat
+                Console.WriteLine("Monster was yeeted");
+                return true;
+            }
+            return true;
+        }
+
+        bool flee()
+        {
+            Console.WriteLine("Pussy...");
+            return true;
+        }
+
+        bool heal()
+        {
+
             return true;
         }
     }
