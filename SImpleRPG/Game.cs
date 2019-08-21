@@ -8,18 +8,35 @@ namespace SImpleRPG
 {
     class Game
     {
+        string playerName = "";
+        int playerHealth = 100;
         public void Start()
         {
-            string playerName = "";
-            int playerHealth = 100;
+            Welcome();
 
+            int monsterRemaining = 5;
+            bool alive = true;
+            
+            //fight until you lose
+            while (alive && monsterRemaining > 0)
+            {
+                Console.WriteLine("There are " + monsterRemaining + " monsters remaining.");
+                alive = Encounter(20);
+                monsterRemaining--;
+            }
+
+            Console.ReadKey();
+        }
+        void Welcome()
+        {
             //Welcome the player
             Console.Write("What is your name? ");
             playerName = Console.ReadLine();
             Console.WriteLine("Welcome, " + playerName + ".");
+        }
 
-            //Monster encounter!
-            int monsterDamage = 13;
+        bool Encounter(int monsterDamage)
+        {
             Console.WriteLine("");
             Console.WriteLine("There is a monster in front of you");
 
@@ -33,17 +50,22 @@ namespace SImpleRPG
                 Console.WriteLine("THe monster attacks! " + playerName + " takes " + monsterDamage + " damage!");
                 playerHealth = playerHealth - monsterDamage;
                 Console.WriteLine(playerName + " has " + playerHealth + " health remaining.");
+                if (playerHealth <= 0)
+                {
+                    //player defeat!
+                    Console.WriteLine(playerName + " was defeated...");
+                    return false;
+                }
                 //player attack
-                Console.WriteLine(playerName + " attacks! The monster is defeated!");
+                Console.WriteLine(playerName + " attacks! The monster got yeeted!");
 
             }
             else if (action == "flee" || action == "Flee")
             {
                 //escape
-                Console.WriteLine("Got away safely...");
+                Console.WriteLine("Pussy...");
             }
-
-            Console.ReadKey();
+            return true;
         }
     }
 }
